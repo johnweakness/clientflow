@@ -15,7 +15,13 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
     options.headers['Content-Type'] = 'application/json';
   }
 
-  const response = await fetch(url, options);
+  let response;
+
+  try {
+    response = await fetch(url, options);
+  } catch {
+    throw new Error(`Cannot connect to the API. Check VITE_API_BASE_URL: ${API_BASE}`);
+  }
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok) {
