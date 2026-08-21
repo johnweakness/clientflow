@@ -21,7 +21,7 @@ ClientFlow is a full-stack client and task management dashboard built to demonst
 
 ## Architecture
 
-React → PHP REST API → Neon PostgreSQL
+React → Vercel Serverless API → Neon PostgreSQL
 
 ## Screenshots
 

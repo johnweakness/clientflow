@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost/clientflow/backend/public';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 async function request(path, { method = 'GET', body, headers = {} } = {}) {
   const url = `${API_BASE}${path}`;
