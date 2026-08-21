@@ -9,6 +9,7 @@ function configureCors(): void
         'http://127.0.0.1:5173',
         'http://127.0.0.1:5174',
         'https://clientflow-six-phi.vercel.app',
+        'https://clientflow-5g62nh5da-jaykie.vercel.app',
     ];
 
     if (in_array($origin, $allowedOrigins, true)) {
@@ -22,6 +23,16 @@ function configureCors(): void
 }
 
 configureCors();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'None',
+    ]);
+}
 
 if (getRequestMethod() === 'OPTIONS') {
     http_response_code(204);
