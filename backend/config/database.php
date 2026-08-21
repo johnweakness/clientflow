@@ -1,14 +1,34 @@
 <?php
 
-const DB_HOST = '127.0.0.1';
-const DB_PORT = '3306';
-const DB_NAME = 'clientflow';
-const DB_USER = 'root';
-const DB_PASS = '';
+function getDatabaseUrl(): string
+{
+    $databaseUrl = getenv('DATABASE_URL');
+
+    if ($databaseUrl !== false && $databaseUrl !== '') {
+        return $databaseUrl;
+    }
+
+    $host = getenv('DB_HOST') ?: '127.0.0.1';
+    $port = getenv('DB_PORT') ?: '5432';
+    $name = getenv('DB_NAME') ?: 'clientflow';
+    $user = getenv('DB_USER') ?: 'postgres';
+    $password = getenv('DB_PASS') ?: '';
+
+    return "postgresql://{$user}:{$password}@{$host}:{$port}/{$name}?sslmode=require";
+}
 
 function getDatabaseConnection(): PDO
 {
-    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+    $parts = parse_url(getDatabaseUrl());
+
+    if ($parts === false || empty($parts['host']) || empty($parts['path'])) {
+        throw new InvalidArgumentException('DATABASE_URL is invalid.');
+    }
+
+    $dsn = 'pgsql:host=' . $parts['host'] . ';port=' . ($parts['port'] ?? 5432)
+        . ';dbname=' . ltrim($parts['path'], '/') . ';sslmode=require';
+    $username = isset($parts['user']) ? rawurldecode($parts['user']) : '';
+    $password = isset($parts['pass']) ? rawurldecode($parts['pass']) : '';
 
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -16,5 +36,5 @@ function getDatabaseConnection(): PDO
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
-    return new PDO($dsn, DB_USER, DB_PASS, $options);
+    return new PDO($dsn, $username, $password, $options);
 }

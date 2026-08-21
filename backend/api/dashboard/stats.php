@@ -15,15 +15,15 @@ if (getRequestMethod() !== 'GET') {
 try {
     $pdo = getDatabaseConnection();
 
-    $statsQuery = 'SELECT
+    $statsQuery = "SELECT
         (SELECT COUNT(*) FROM clients WHERE user_id = :total_clients_user_id) AS total_clients,
-        (SELECT COUNT(*) FROM clients WHERE user_id = :active_clients_user_id AND status = "Active") AS active_clients,
-        (SELECT COUNT(*) FROM clients WHERE user_id = :completed_clients_user_id AND status = "Completed") AS completed_clients,
-        (SELECT COUNT(*) FROM clients WHERE user_id = :pending_clients_user_id AND status = "Lead") AS pending_clients,
+        (SELECT COUNT(*) FROM clients WHERE user_id = :active_clients_user_id AND status = 'Active') AS active_clients,
+        (SELECT COUNT(*) FROM clients WHERE user_id = :completed_clients_user_id AND status = 'Completed') AS completed_clients,
+        (SELECT COUNT(*) FROM clients WHERE user_id = :pending_clients_user_id AND status = 'Lead') AS pending_clients,
         (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :total_tasks_user_id) AS total_tasks,
-        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :tasks_due_soon_user_id AND t.status != "Completed" AND t.due_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)) AS tasks_due_soon,
-        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :overdue_tasks_user_id AND t.status != "Completed" AND t.due_date < CURDATE()) AS overdue_tasks,
-        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :completed_tasks_user_id AND t.status = "Completed") AS completed_tasks';
+        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :tasks_due_soon_user_id AND t.status != 'Completed' AND t.due_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '3 days') AS tasks_due_soon,
+        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :overdue_tasks_user_id AND t.status != 'Completed' AND t.due_date < CURRENT_DATE) AS overdue_tasks,
+        (SELECT COUNT(*) FROM tasks t INNER JOIN clients c ON c.id = t.client_id WHERE c.user_id = :completed_tasks_user_id AND t.status = 'Completed') AS completed_tasks";
 
     $stmt = $pdo->prepare($statsQuery);
     $stmt->execute([

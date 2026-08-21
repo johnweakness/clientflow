@@ -12,7 +12,9 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
 
   if (body !== undefined) {
     options.body = JSON.stringify(body);
-    options.headers['Content-Type'] = 'application/json';
+    options.headers['Content-Type'] = method === 'POST' && path === '/api/auth/login.php'
+      ? 'text/plain;charset=UTF-8'
+      : 'application/json';
   }
 
   let response;

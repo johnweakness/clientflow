@@ -173,7 +173,7 @@ try {
             ], 404);
         }
 
-        $stmt = $pdo->prepare('UPDATE clients SET client_name = :client_name, company_name = :company_name, email = :email, phone = :phone, project_service = :project_service, status = :status, notes = :notes, updated_at = NOW() WHERE id = :id AND user_id = :user_id');
+        $stmt = $pdo->prepare('UPDATE clients SET client_name = :client_name, company_name = :company_name, email = :email, phone = :phone, project_service = :project_service, status = :status, notes = :notes, updated_at = CURRENT_TIMESTAMP WHERE id = :id AND user_id = :user_id');
         $stmt->execute([
             ':client_name' => $clientName,
             ':company_name' => $companyName,

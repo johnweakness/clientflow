@@ -1,6 +1,6 @@
 # ClientFlow
 
-ClientFlow is a full-stack client and task management dashboard built to demonstrate a junior web developer's practical skills with React, JavaScript, PHP, MySQL, and REST APIs.
+ClientFlow is a full-stack client and task management dashboard built to demonstrate a junior web developer's practical skills with React, JavaScript, PHP, PostgreSQL, and REST APIs.
 
 ## Features
 
@@ -10,18 +10,18 @@ ClientFlow is a full-stack client and task management dashboard built to demonst
 - Global task tracking with status, priority, and due date filters
 - Responsive admin dashboard layout with mobile navigation
 - JSON-based PHP REST API with PDO and prepared statements
-- Demo data seeded into MySQL for quick portfolio review
+- Demo data seeded into PostgreSQL for quick portfolio review
 
 ## Tech Stack
 
 - Frontend: React, Vite, JavaScript, Tailwind CSS, React Router, Lucide React
-- Backend: PHP, PDO, MySQL, session-based auth, JSON responses
-- Database: MySQL
-- Workflow: Git/GitHub, XAMPP local development
+- Backend: PHP, PDO PostgreSQL, session-based auth, JSON responses
+- Database: Neon PostgreSQL
+- Workflow: Git/GitHub, Vercel frontend, PHP hosting backend
 
 ## Architecture
 
-React → PHP REST API → MySQL
+React → PHP REST API → Neon PostgreSQL
 
 ## Screenshots
 
@@ -35,8 +35,8 @@ Add screenshots later from a local browser preview.
    cd frontend
    npm install
    ```
-3. Set up MySQL and import the schema and seed data.
-4. Run the PHP API under XAMPP or a local PHP server.
+3. Create a Neon PostgreSQL database and run `database/schema.sql`, followed by `database/seed.sql`.
+4. Set the `DATABASE_URL` environment variable for the PHP API.
 5. Start the React frontend:
    ```bash
    cd frontend
@@ -48,21 +48,21 @@ Add screenshots later from a local browser preview.
 Import the SQL files in this order:
 
 ```sql
-mysql -u your_user -p < database/schema.sql
-mysql -u your_user -p < database/seed.sql
+psql "$DATABASE_URL" -f database/schema.sql
+psql "$DATABASE_URL" -f database/seed.sql
 ```
 
 ## Environment / Configuration
 
-Update the database configuration in `backend/config/database.php` if your XAMPP credentials differ.
+Set `DATABASE_URL` to the connection string from Neon. The PHP backend also supports separate `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS` variables.
 
-Default local credentials used by this project:
+Example local PostgreSQL fallback values:
 
 ```php
 DB_HOST = '127.0.0.1'
-DB_PORT = '3306'
+DB_PORT = '5432'
 DB_NAME = 'clientflow'
-DB_USER = 'root'
+DB_USER = 'postgres'
 DB_PASS = ''
 ```
 
@@ -75,12 +75,12 @@ npm run dev
 
 Frontend runs on Vite's default local port, typically `http://localhost:5173`.
 
-## Running the PHP API with XAMPP
+## Deploying the PHP API
 
-1. Start Apache and MySQL in XAMPP.
-2. Place the project in `htdocs` or an equivalent local web root.
+1. Upload the `backend` folder to a PHP host.
+2. Configure `DATABASE_URL` with the Neon connection string.
 3. Make sure the document root serves the `backend/public` folder or use a virtual host pointing there.
-4. Visit the route through the PHP backend such as:
+4. Test the route through the PHP backend such as:
    ```text
    http://localhost/clientflow/backend/public/api/auth/login.php
    ```
@@ -123,7 +123,7 @@ clientflow/
 - JavaScript
 - PHP backend development
 - REST API development
-- MySQL/SQL
+- PostgreSQL/SQL
 - CRUD operations
 - Authentication
 - API integration

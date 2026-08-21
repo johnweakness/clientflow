@@ -212,7 +212,7 @@ try {
             ], 422);
         }
 
-        $stmt = $pdo->prepare('UPDATE tasks SET title = :title, description = :description, status = :status, priority = :priority, due_date = :due_date, updated_at = NOW() WHERE id = :id');
+        $stmt = $pdo->prepare('UPDATE tasks SET title = :title, description = :description, status = :status, priority = :priority, due_date = :due_date, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
         $stmt->execute([
             ':title' => $title,
             ':description' => $description,

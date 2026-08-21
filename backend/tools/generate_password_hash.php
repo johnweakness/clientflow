@@ -5,13 +5,23 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $password = $argv[1] ?? null;
+$email = $argv[2] ?? null;
 
 if ($password === null) {
     $password = readline('Password to hash: ');
 }
 
+if ($email === null) {
+    $email = readline('User email: ');
+}
+
 if ($password === false || $password === '') {
     fwrite(STDERR, "A non-empty password is required.\n");
+    exit(1);
+}
+
+if ($email === false || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    fwrite(STDERR, "A valid email address is required.\n");
     exit(1);
 }
 
@@ -24,4 +34,4 @@ if ($hash === false) {
 
 echo "Password hash:\n{$hash}\n\n";
 echo "SQL for phpMyAdmin:\n";
-echo "UPDATE users SET password_hash = '" . addslashes($hash) . "' WHERE email = 'demo@clientflow.test';\n";
+echo "UPDATE users SET password_hash = '" . addslashes($hash) . "' WHERE email = '" . addslashes($email) . "';\n";
